@@ -15,11 +15,43 @@
 #
 # Returns: 
 #    A character string in the format "<variable>_<type>".
-get_variable_name <- function(variable, type) {
+get_variable_name = function(variable, type) {
   paste0(variable, "_", type)
 }
 
+# Gets the variable type (for data frames) from the input long name
+# 
+# Args:
+#    type: A character string specifying the type.
+#
+# Returns: 
+#    A character string for type that can be used for data frames
+get_type = function(type) {
+  if (type == 'mean') {
+    return('mean')
+  } else if (type == 'interannual variance'){
+    return('iav')
+  }
+}
 
+# Gets the variable type (for data frames) from the input long name
+# 
+# Args:
+#    type: A character string specifying the type.
+#
+# Returns: 
+#    A character string for type that can be used for data frames
+get_parameter_type = function(param_choice, fates_only_list,
+                              clm_only_list, common_list){
+  if (param_choice == 'all'){
+    return(c())
+  } else if (param_choice == 'distinct') {
+    return(c(fates_only_list, clm_only_list))
+  } else if (param_choice == 'common') {
+    return(common_list)
+  }
+  
+}
 # Load and preprocess global ensemble data
 #
 # Reads a CSV of global model data, merges it with category metadata, filters rows, 

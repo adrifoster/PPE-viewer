@@ -340,6 +340,8 @@ plot_cumulative_variance = function(variance_df, variable, type, param_chunks){
   clm_fates_cumm_variance = rbind(fates_cumm_variance, clm_cumm_variance) %>%
     mutate(model = factor(model, levels = c('CLM-FATES', 'CLM')))
   
+  print(clm_fates_cumm_variance)
+  
   # plot
   ggplot(clm_fates_cumm_variance, aes(param_chunk, propsum)) +
     geom_col(aes(fill=model), position='dodge') +

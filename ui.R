@@ -10,24 +10,24 @@
 ### SHINY UI ###
 ui <- bootstrapPage(
   tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+  tags$head(includeScript("www/selectize_click.js")),
   
   navbarPage(
-    
-    theme = bslib::bs_theme(version = 5, base_font = bslib::font_google("Inter")),
-    collapsible = TRUE,
-    
+  
     title = tags$a(class = "navbar-brand", style = "color: white !important;", 
-                   "CLM-FATES and CLM One-at-a-Time Ensembles"),
+                   "CLM-FATES and CLM PPE"),
     id = 'main_nav',
-    windowTitle = 'CLM-FATES and CLM OAAT Ensembles',
+    windowTitle = 'CLM-FATES and CLM PPE',
+    theme = bslib::bs_theme(version = 5, base_font = bslib::font_google("Inter")),
     
     ## About this study panel
     tabPanel("About this Study",
         tags$div(
           class = "about-panel",
-
+        
           # Header
-          tags$h3("About this Study"),
+          tags$h1('CLM-FATES and CLM Perturbed Parameter Ensemble'),
+          tags$h4("About this Study"),
           tags$p("This interactive app explores how individual parameter perturbations affect model outputs in the CLM and CLM-FATES models in Satellite Phenology (SP) mode. Each parameter is varied one at a time to assess its influence on key biophysical variables."),
           
           # Logo
@@ -159,13 +159,13 @@ ui <- bootstrapPage(
              sidebarLayout(
                sidebarPanel(
                  class="panel-section sidebar",
-                 tags$h3("Parameter Explorer"),
+                 tags$h4("Parameter Explorer"),
                  tags$p("Select a parameter and output variable to see how it affects model results. Only parameters with non-zero effects are listed."),
-                 selectizeInput("param_explorer_parameter_select", "Parameter:",
+                 pickerInput("paramExplorerParameterSelect", "Parameter:",
                              choices = all_nonzero_params,
                              selected= all_nonzero_params[1],
                              multiple=FALSE),
-                 selectizeInput("param_explorer_variable_select", "Variable:",
+                 pickerInput("paramExplorerVariableSelect", "Variable:",
                              choices = VARIABLES,
                              selected= VARIABLES[1],
                              multiple=FALSE),
@@ -174,11 +174,12 @@ ui <- bootstrapPage(
                  tags$div(class="panel-section",
                    style = "margin-bottom: 20px;",
                    tags$br(),
-                   tags$h4(uiOutput("param_explorer_parameter")),
+                   tags$h4(uiOutput("paramExplorerParameter")),
                    tags$br(),
                    tags$h5("Summary Statistics"),
+                   tags$h6(uiOutput("paramExplorerVariable")),
                    tags$div(class='plot-card', 
-                            shinycssloaders::withSpinner(tableOutput("param_explorer_summary_table"),
+                            shinycssloaders::withSpinner(tableOutput("paramExplorerSummaryTable"),
                                                          color="#012169",
                                                          type=1))
                  ),
@@ -191,6 +192,10 @@ ui <- bootstrapPage(
                               shinycssloaders::withSpinner(plotOutput("globalValuesPlot", 
                                                                       height="500px", width="700px"),
                                                            color="#012169")),
+                     div(class='plot-card-btns',
+                         style = "margin-top: 10px; text-align: right;",
+                         downloadButton("downloadGlobalPlot", "Download Plot")
+                     ),
                      tags$br(),
                      tags$h5("Annual mean differences"),
                      tags$p("Difference maps show the annual value for the ensemble member for the maximum parameter value 
@@ -198,19 +203,36 @@ ui <- bootstrapPage(
                      tags$div(class="plot-card", 
                               shinycssloaders::withSpinner(plotOutput("globalValuesDifferencePlot", height="500px", width="700px"),
                                                            color="#012169")),
+                     div(class='plot-card-btns',
+                         style = "margin-top: 10px; text-align: right;",
+                         downloadButton("downloadGlobalDiffPlot", "Download Plot")
                      ),
+                     ),
+    
                    tabPanel(
                      "Global maps: model differences",
                             tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesModelDifferencePlot",
                                        height="500px",
-                                       width="700px"), color="#012169"))
+                                       width="700px"), color="#012169")),
+                     div(class='plot-card-btns',
+                         style = "margin-top: 10px; text-align: right;",
+                         downloadButton("downloadGlobalDiffDiffPlot", "Download Plot")
+                     ),
                    ),
                    tabPanel(
                      "Climatology & Zonal Means",
                      tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesClimPlot", height="400px",
                                 width="600px"), color="#012169")),
+                     div(class='plot-card-btns',
+                         style = "margin-top: 10px; text-align: right;",
+                         downloadButton("downloadClimatologyPlot", "Download Plot")
+                     ),
                      tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesZonalPlot", height="400px",
-                                width="600px"), color="#012169"))
+                                width="600px"), color="#012169")),
+                     div(class='plot-card-btns',
+                         style = "margin-top: 10px; text-align: right;",
+                         downloadButton("downloadZonalPlot", "Download Plot")
+                     ),
                   )
                  ),
                  )
@@ -223,11 +245,11 @@ ui <- bootstrapPage(
                  tags$h5('Global Values'),
                  tags$p("Select a parameter and output variable to see how it affects model results. Only parameters with non-zero effects are listed."),
 
-                 selectizeInput("ensemble_variable_select", "Variable:",
+                 selectizeInput("ensembleVariableSelect", "Variable:",
                              choices = VARIABLES,
                              selected = "GPP",
                              multiple=FALSE),
-                 selectizeInput("ensemble_type_select", "Summation type:",
+                 selectizeInput("ensembleTypeSelect", "Summation type:",
                              choices = c("mean", "interannual variance"),
                              selected= "mean",
                              multiple=FALSE),
@@ -237,7 +259,7 @@ ui <- bootstrapPage(
                  
                  tags$p("Select number of parameters to group cumulative variance by."),
                  
-                 sliderInput("variance_chunk_select", "Number of parameters per group:",
+                 sliderInput("ensembleChunkSelect", "Number of parameters per group:",
                              min=1, max=20, value=5)
                  
                ),
@@ -253,7 +275,7 @@ ui <- bootstrapPage(
                             tags$p("Hover over a point to see what parameter was perturbed and in which direction for that ensemble member."),
                             tags$br(),
                             tags$div(class='plot-card', shinycssloaders::withSpinner(plotlyOutput("ensemblePlot", height="700px", width="600px"),
-                                                                                     color="#012169"))
+                                                                                     color="#012169")),
                             ),
                    tabPanel("Cumulative Variance",
                             tags$br(),
@@ -261,7 +283,11 @@ ui <- bootstrapPage(
                             tags$p("Variance contribution of a parameter to the global annual mean or interannual variance was calculated as the sum of the squared differences from the default simulation:"),
                             withMathJax("$$V_i = (\\bar{x}_i - x_{i,min})^2  + (x_{i,max} - \\bar{x}_i)^2$$"),
                             tags$div(class='plot-card', shinycssloaders::withSpinner(plotOutput("cumulativeVariancePlot", height="500px", width="700px"),
-                                                                                     color="#012169")))
+                                                                                     color="#012169")),
+                            div(class='plot-card-btns',
+                                style = "margin-top: 10px; text-align: right;",
+                                downloadButton("downloadCumulativeVarPlot", "Download Plot"))
+                            )
                  )
                )
              )
@@ -272,21 +298,21 @@ ui <- bootstrapPage(
                  tags$h3("Top Parameters"),
                  tags$p("Select output variable, summation type, and number of parameters to include."),
                  
-                 selectizeInput("top_params_variable_select", "Variable:",
+                 selectizeInput("topParamsVariableSelect", "Variable:",
                              choices = VARIABLES,
                              selected = "GPP",
                              multiple=FALSE),
-                 selectizeInput("top_params_type_select", "Summation type:",
+                 selectizeInput("topParamsTypeSelect", "Summation type:",
                              choices = c("mean", "interannual variance"),
                              selected= "mean",
                              multiple=FALSE),
-                 sliderInput("top_params_n_select", "Number of parameters:",
+                 sliderInput("topParamsNSelect", "Number of parameters:",
                              min=1, max=30, value=10),
                  tags$p("Additionally, optionally select a grouping of parameters: 'all' for all parameters, 
                         'common' for parameters that affect both FATES and CLM, and 'distinct' for parameters that 
                         only affected either FATES or CLM"),
                  
-                 selectizeInput("top_params_param_choice", "Parameters:",
+                 selectizeInput("topParamsParameterTypeSelect", "Parameters:",
                              choices = c('all', 'distinct', 'common'),
                              selected = "all",
                              multiple=FALSE),
@@ -294,7 +320,7 @@ ui <- bootstrapPage(
                  tags$h5('By Biome'),
                  tags$p("Select biomes to view. Note that more biomes may be
                harder to view all at once."),
-               selectizeInput("top_params_biome_choice", "Biome:",
+               selectizeInput("topParamsBiomeSelect", "Biome:",
                               choices = unique(BIOME_DF$biome_name),
                               options = list(`actions-box` = TRUE),
                               selected = 'Tropical rain forest',
@@ -309,40 +335,49 @@ ui <- bootstrapPage(
                    tabPanel("Global", 
                             tags$div(class='plot-card', 
                                      shinycssloaders::withSpinner(plotOutput("topParametersPlot", width="900px", height="500px"),
-                                                                  color="#012169"))),
+                                                                  color="#012169")),
+                            div(class='plot-card-btns',
+                                style = "margin-top: 10px; text-align: right;",
+                                downloadButton("downloadTopParamsPlot", "Download Plot"))
+                            ),
+                   
                    tabPanel("By Biome", 
                             tags$div(class='plot-card', 
                                      shinycssloaders::withSpinner(plotOutput("topParametersbyBiomePlot", height="700px",
-                                                   width="900px"), color="#012169")))
+                                                   width="900px"), color="#012169")),
+                            div(class='plot-card-btns',
+                                style = "margin-top: 10px; text-align: right;",
+                                downloadButton("downloadTopParamsByBiomePlot", "Download Plot"))
+                            )
                  )
                  
                )
              )
     ),
-    tabPanel("Model Differences",
-             sidebarLayout(
+    tabPanel("Model Comparisons",
+              sidebarLayout(
                sidebarPanel(
-                 tags$h3("Model Differences"),
+                 tags$h3("Model Comparisons"),
                  tags$p("Select output variable and summation type"),
-                 selectizeInput("model_diff_variable_select", "Variable:",
+                 selectizeInput("modelDiffVariableSelect", "Variable:",
                                 choices = VARIABLES,
                                 selected = "GPP",
                                 multiple=FALSE),
-                 selectizeInput("model_diff_type_select", "Summation type:",
+                 selectizeInput("modelDiffTypeSelect", "Summation type:",
                                 choices = c("mean", "interannual variance"),
                                 selected= "mean",
                                 multiple=FALSE),
-                 sliderInput("model_params_n_select", "Number of parameters:",
+                 sliderInput("modelDiffNSelect", "Number of parameters:",
                              min=1, max=30, value=15),
                  tags$p("Additionally, optionally select a grouping of parameters: 'all' for all parameters, 
                         'common' for parameters that affect both FATES and CLM, and 'distinct' for parameters that 
                         only affected either FATES or CLM"),
-                 selectizeInput("model_diff_param_choice", "Parameters:",
+                 selectizeInput("modelDiffParamTypeSelect", "Parameters:",
                              choices = c('all', 'distinct', 'common'),
                              selected = "all",
                              multiple=FALSE),
                  tags$p("Optionally select specific biomes."),
-                 selectizeInput("model_diff_biome_choice", "Biome:",
+                 selectizeInput("modelDiffBiomeSelect", "Biome:",
                              choices = c('all', unique(BIOME_DF$biome_name)),
                              selected = 'all',
                              multiple=FALSE),
@@ -352,7 +387,10 @@ ui <- bootstrapPage(
                  tags$h5("Percent differences in annual means for each parameter for select variables."),
                  tags$div(class='plot-card', 
                           shinycssloaders::withSpinner(plotOutput("modelDiffPlot", height="400px", width="700px"),
-                                                       color="#012169"))
+                                                       color="#012169")),
+                 div(class='plot-card-btns',
+                     style = "margin-top: 10px; text-align: right;",
+                     downloadButton("downloadModelDiffPlot", "Download Plot"))
                )
              )
 
@@ -362,6 +400,73 @@ ui <- bootstrapPage(
              fluidPage(
                DT::dataTableOutput("paramInfoTable")
              )
-    )
+    ),
+    tabPanel("Download Data",
+              bslib::card(
+                bslib::card_header("Download Options"),
+              
+                div(style="display: flex; align-items: center; gap: 10px;",
+                    tags$label("Model(s):", style="font-weight: 500; margin-bottom: 0;"),
+                    actionButton("downloadModelSelectAll", 
+                                 "Select/Deselect All", 
+                                 class="btn-sm")
+                ),
+                div(style="margin-top: 5px;",
+                    selectizeInput("downloadDataModelSelect", NULL,
+                                   choices = MODELS,
+                                   selected=NULL,
+                                   multiple=TRUE,
+                                   options = list(
+                                     plugins = list('remove_button'),
+                                     placeholder="Choose models..."
+                                   )
+                    )
+                ),
+                hr(),
+                
+                div(style="display: flex; align-items: center; gap: 10px;",
+                    tags$label("Dataset(s):", style="font-weight: 500; margin-bottom: 0;"),
+                    actionButton("downloadDataTypeSelectAll", 
+                                 "Select/Deselect All", 
+                                 class="btn-sm")
+                ),
+                div(style="margin-top: 5px;",
+                    selectizeInput("downloadDataTypeSelect", NULL,
+                                   choices = DATASETS,
+                                   selected=NULL,
+                                   multiple=TRUE,
+                                   options = list(
+                                     plugins = list('remove_button'),
+                                     placeholder="Choose datasets..."
+                                   )
+                    )
+                ),
+                
+                hr(),
+                
+                div(style="display: flex; align-items: center; gap: 10px;",
+                    tags$label("Variables(s):", style="font-weight: 500; margin-bottom: 0;"),
+                    actionButton("downloadVariableSelectAll", 
+                                 "Select/Deselect All", 
+                                 class="btn-sm")
+                ),
+                div(style="margin-top: 5px;",
+                    selectizeInput("downloadDataVariableSelect", NULL,
+                                   choices = VARIABLES,
+                                   selected=NULL,
+                                   multiple=TRUE,
+                                   options = list(
+                                     plugins = list('remove_button'),
+                                     placeholder="Choose variables..."
+                                   )
+                    )
+                ),
+                
+                hr(),
+                div(class='plot-card-btns',
+                    style = "margin-top: 10px; text-align: left;",
+                    downloadButton("downloadData", "Download Data"))
+             )
+             )
     )
 )

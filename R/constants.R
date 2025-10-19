@@ -207,3 +207,8 @@ TYPE_LABEL_LOOKUP <- list(
   mean = 'mean',
   iav = 'interannual variance of'
 )
+
+DATASETS = c("Global annual data", "Biome-specific annual data", 
+             "Climatology data", "Zonal means data", "Annual maps")
+
+MODELS = c("CLM-FATES", "CLM")
