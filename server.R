@@ -581,7 +581,6 @@ server <- function(input, output, session) {
       # create zip
       setwd(tempdir())
       utils::zip(zipfile=file, files=basename(files_to_zip))
-      print(files_to_zip)
       
     },
     contentType = "application/zip"
