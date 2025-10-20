@@ -8,8 +8,10 @@
 # #########################
 
 ### SHINY SERVER ###
-server <- function(input, output) {
+server <- function(input, output, session) {
   
+  shinyjs::disable("downloadTriggerButton")  
+
   ## Parameter Explorer Parameter UI ##
   output$paramExplorerParameter <- renderUI({
     
@@ -41,7 +43,7 @@ server <- function(input, output) {
   summary_table = reactive({
     
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     variable_name = get_variable_name(variable, 'mean')
     cols_to_select <- c("model", "parameter_name", "category", "subcategory", 
@@ -86,7 +88,7 @@ server <- function(input, output) {
   ## Annual maps plotting ##
   global_map = reactive({
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     plot_global_vals(
       fates_map_dat, fatesclm_map_dat, clm_map_dat, parameter, variable, 
@@ -102,7 +104,7 @@ server <- function(input, output) {
   output$downloadGlobalPlot <- downloadHandler(
     filename = function() {
       parameter = input$paramExplorerParameterSelect
-      variable = input$paramExplorerVariableSelect
+      variable = get_variable_shortname(input$paramExplorerVariableSelect)
       
       paste0("global_values_plot_", variable, '_', parameter, '_', 
              Sys.Date(), ".png")
@@ -118,7 +120,7 @@ server <- function(input, output) {
   global_diff_map = reactive({
     
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     plot_global_diffs(
       fates_map_dat, fatesclm_map_dat, clm_map_dat,
@@ -134,7 +136,7 @@ server <- function(input, output) {
   output$downloadGlobalDiffPlot <- downloadHandler(
     filename = function() {
       parameter = input$paramExplorerParameterSelect
-      variable = input$paramExplorerVariableSelect
+      variable = get_variable_shortname(input$paramExplorerVariableSelect)
       
       paste0("global_diff_values_plot_", variable, '_', parameter, '_', 
              Sys.Date(), ".png")
@@ -150,7 +152,7 @@ server <- function(input, output) {
   global_diff_diff_map = reactive({
     
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     if (!(parameter %in% common_params)){
       validate("Please choose a parameter that affects both CLM and CLM-FATES to view this graph.")
@@ -167,7 +169,7 @@ server <- function(input, output) {
   output$downloadGlobalDiffDiffPlot <- downloadHandler(
     filename = function() {
       parameter = input$paramExplorerParameterSelect
-      variable = input$paramExplorerVariableSelect
+      variable = get_variable_shortname(input$paramExplorerVariableSelect)
       
       paste0("global_model_diffs_values_plot_", variable, '_', parameter, '_', 
              Sys.Date(), ".png")
@@ -182,7 +184,7 @@ server <- function(input, output) {
   ## Climatology plotting ##
   climatology_plot = reactive({
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     dat = get_plot_dat(
       all_clim, parameter, fates_only_params, clm_only_params, common_params
@@ -199,7 +201,7 @@ server <- function(input, output) {
   output$downloadClimatologyPlot <- downloadHandler(
     filename = function() {
       parameter = input$paramExplorerParameterSelect
-      variable = input$paramExplorerVariableSelect
+      variable = get_variable_shortname(input$paramExplorerVariableSelect)
       
       paste0("climatology_plot_", variable, '_', parameter, '_', 
              Sys.Date(), ".png")
@@ -214,7 +216,7 @@ server <- function(input, output) {
   ## Zonal means plotting ##
   zonal_plot = reactive({
     parameter = input$paramExplorerParameterSelect
-    variable = input$paramExplorerVariableSelect
+    variable = get_variable_shortname(input$paramExplorerVariableSelect)
     
     dat = get_plot_dat(
       all_zonal, parameter, fates_only_params, clm_only_params, common_params
@@ -230,7 +232,7 @@ server <- function(input, output) {
   output$downloadZonalPlot <- downloadHandler(
     filename = function() {
       parameter = input$paramExplorerParameterSelect
-      variable = input$paramExplorerVariableSelect
+      variable = get_variable_shortname(input$paramExplorerVariableSelect)
       
       paste0("zonal_means_plot_", variable, '_', parameter, '_', 
              Sys.Date(), ".png")
@@ -244,7 +246,7 @@ server <- function(input, output) {
 
   ## Ensemble Variance Plotting ##
   ensemble_plot = reactive({
-    variable = input$ensembleVariableSelect
+    variable = get_variable_shortname(input$ensembleVariableSelect)
     type = get_type(input$ensembleTypeSelect)
     
     plot_ensemble_variance(
@@ -257,7 +259,7 @@ server <- function(input, output) {
   
   ## Cumulative Variance Plotting
   cumulative_var_plot = reactive({
-    variable = input$ensembleVariableSelect
+    variable = get_variable_shortname(input$ensembleVariableSelect)
     type = get_type(input$ensembleTypeSelect)
     param_chunks = input$ensembleChunkSelect
     
@@ -270,7 +272,7 @@ server <- function(input, output) {
   
   output$downloadCumulativeVarPlot <- downloadHandler(
     filename = function() {
-      variable = input$ensembleVariableSelect
+      variable = get_variable_shortname(input$ensembleVariableSelect)
       type = get_type(input$ensembleTypeSelect)
       param_chunks = input$ensembleChunkSelect
       
@@ -286,7 +288,7 @@ server <- function(input, output) {
   
   ## Top Parameters Plotting ##
   top_params_plot = reactive({
-    variable = input$topParamsVariableSelect
+    variable = get_variable_shortname(input$topParamsVariableSelect)
     type = get_type(input$topParamsTypeSelect)
     n = input$topParamsNSelect
     param_select = get_parameter_type(input$topParamsParameterTypeSelect, 
@@ -302,7 +304,7 @@ server <- function(input, output) {
   
   output$downloadTopParamsPlot <- downloadHandler(
     filename = function() {
-      variable = input$topParamsVariableSelect
+      variable = get_variable_shortname(input$topParamsVariableSelect)
       type = get_type(input$topParamsTypeSelect)
       n = input$topParamsNSelect
       
@@ -318,7 +320,7 @@ server <- function(input, output) {
   
   ## Top Parameters By Biome Plotting ##
   top_params_biome_plot = reactive({
-    variable = input$topParamsVariableSelect
+    variable = get_variable_shortname(input$topParamsVariableSelect)
     type = get_type(input$topParamsTypeSelect)
     n = input$topParamsNSelect
     param_select = get_parameter_type(input$topParamsParameterTypeSelect, 
@@ -338,7 +340,7 @@ server <- function(input, output) {
   
   output$downloadTopParamsByBiomePlot <- downloadHandler(
     filename = function() {
-      variable = input$topParamsVariableSelect
+      variable = get_variable_shortname(input$topParamsVariableSelect)
       type = get_type(input$topParamsTypeSelect)
       n = input$topParamsNSelect
       
@@ -354,7 +356,7 @@ server <- function(input, output) {
   
   ## Model Differences Plotting ##
   model_diff_plot = reactive({
-    variable = input$modelDiffVariableSelect
+    variable = get_variable_shortname(input$modelDiffVariableSelect)
     type = get_type(input$modelDiffTypeSelect)
     param_select = input$modelDiffParamTypeSelect
     biome_select = input$modelDiffBiomeSelect
@@ -375,11 +377,11 @@ server <- function(input, output) {
     
   })
   
-  output$modelDiffPlot <- renderPlot(model_diff_plot())
+  output$modelDiffPlot = renderPlot(model_diff_plot())
   
-  output$downloadModelDiffPlot <- downloadHandler(
+  output$downloadModelDiffPlot = downloadHandler(
     filename = function() {
-      variable = input$modelDiffVariableSelect
+      variable = get_variable_shortname(input$modelDiffVariableSelect)
       type = get_type(input$modelDiffTypeSelect)
 
       paste0("model_comparisons_plot_", variable, '_', type, '_',
@@ -393,14 +395,15 @@ server <- function(input, output) {
   )
   
   ## Parameter Information Table ##
-  output$paramInfoTable <- DT::renderDataTable({
+  output$paramInfoTable = DT::renderDataTable({
     datatable(output_table,
               options = list(pageLength=10, autoWidth=TRUE),
               rownames=FALSE)
   })
   
+  ## Download Data
   observeEvent(input$downloadModelSelectAll, {
-    is_all_selected <- all(MODELS %in% input$downloadDataModelSelect)
+    is_all_selected = all(MODELS %in% input$downloadDataModelSelect)
     
     if (is_all_selected) {
       updateSelectizeInput(
@@ -416,7 +419,7 @@ server <- function(input, output) {
   })
   
   observeEvent(input$downloadDataTypeSelectAll, {
-    is_all_selected <- all(DATASETS %in% input$downloadDataTypeSelect)
+    is_all_selected = all(DATASETS %in% input$downloadDataTypeSelect)
     
     if (is_all_selected) {
       updateSelectizeInput(
@@ -432,7 +435,7 @@ server <- function(input, output) {
   })
   
   observeEvent(input$downloadVariableSelectAll, {
-    is_all_selected <- all(VARIABLES %in% input$downloadDataVariableSelect)
+    is_all_selected <- all(LONG_NAMES %in% input$downloadDataVariableSelect)
     
     if (is_all_selected) {
       updateSelectizeInput(
@@ -442,10 +445,152 @@ server <- function(input, output) {
     } else {
       updateSelectizeInput(
         inputId = "downloadDataVariableSelect",
-        selected = VARIABLES
+        selected = LONG_NAMES
       )
     }
   })
   
+  subset_global_data = reactive({
+    
+    models = input$downloadDataModelSelect
+    variables = get_variable_shortname(input$downloadDataVariableSelect)
+    datasets_selected = input$downloadDataTypeSelect
+    
+    if ("Global annual data" %in% datasets_selected) {
+      df = subset_download_global_data(global_data_all,
+                                       variables=variables,
+                                       models=models)
+    }
+    return(df)
+  })
   
+  subset_biome_data = reactive({
+    
+    models = input$downloadDataModelSelect
+    variables = get_variable_shortname(input$downloadDataVariableSelect)
+    datasets_selected = input$downloadDataTypeSelect
+    
+    if ("Biome-specific annual data" %in% datasets_selected) {
+      df = subset_download_biome_data(biome_data_all,
+                                      variables=variables,
+                                      models=models)
+    }
+    return(df)
+  })
+  
+  subset_clim_data = reactive({
+    
+    models = input$downloadDataModelSelect
+    variables = get_variable_shortname(input$downloadDataVariableSelect)
+    datasets_selected = input$downloadDataTypeSelect
+    
+    if ("Climatology data" %in% datasets_selected) {
+      df = subset_download_climatology_data(all_clim,
+                                            variables = variables,
+                                            models = models)
+    }
+    return(df)
+  })
+  
+  subset_zonal_data = reactive({
+    
+    models = input$downloadDataModelSelect
+    variables = get_variable_shortname(input$downloadDataVariableSelect)
+    datasets_selected = input$downloadDataTypeSelect
+    
+    if ("Zonal means data" %in% datasets_selected) {
+      df = subset_download_zonal_data(all_zonal,
+                                      variables = variables,
+                                      models = models)
+    }
+    return(df)
+  })
+  
+  output$downloadPreviewTable <- renderTable({
+    req(input$downloadDataTypeSelect) 
+    
+    dataset = input$downloadDataTypeSelect[1]
+    if (dataset == "Global annual data") {
+      head(subset_global_data())
+    } else if (dataset == "Biome-specific annual data") {
+      head(subset_biome_data())
+    } else if (dataset == "Climatology data") {
+      head(subset_clim_data())
+    } else if (dataset == "Zonal means data") {
+      head(subset_zonal_data())
+    }
+  })
+  
+  observe({
+    if (is.null(input$downloadDataTypeSelect) || length(input$downloadDataTypeSelect) == 0) {
+      shinyjs::disable("downloadTriggerButton")
+    } else {
+      shinyjs::enable("downloadTriggerButton")
+    }
+  })
+
+  output$hiddenDownloadButton = downloadHandler(
+    filename = function() {
+      paste0("ppe_viewer_data_", Sys.Date(), ".zip")
+    },
+    content = function(file) {
+
+      models = input$downloadDataModelSelect
+      if (length(models) == 0) models = MODELS
+      
+      variables = get_variable_shortname(input$downloadDataVariableSelect)
+      if (length(variables) == 0) variables = VARIABLES
+      
+      datasets_selected = input$downloadDataTypeSelect
+      
+      # temporary directory to hold CSVs
+      tmpdir = tempdir()
+      files_to_zip = c()
+
+      # iterate datasets chosen by user
+      for (dataset in datasets_selected) {
+        
+        if (dataset == "Global annual data") {
+          csv_file = write_csv_safely(subset_global_data(), "global_annual_data.csv", tmpdir)
+        } else if (dataset == "Biome-specific annual data") {
+          csv_file = write_csv_safely(subset_biome_data(), "biome_annual_data.csv", tmpdir)
+        } else if (dataset == "Climatology data") {
+          csv_file = write_csv_safely(subset_clim_data(), "monthly_climatology_data.csv", tmpdir)
+        } else if (dataset == "Zonal means data") {
+          csv_file = write_csv_safely(subset_zonal_data(), "zonal_mean_data.csv", tmpdir)
+        }
+        files_to_zip = c(files_to_zip, csv_file)
+      }
+
+      # optionally include metadata
+      if (isTRUE(input$includeMetadata)) {
+        metadata_file = file.path(tmpdir, "metadata.txt")
+        writeLines(c(
+          "CLM-FATES and CLM SP PPE Shiny App Data Export",
+          paste("Date:", Sys.time()),
+          paste("Models:", paste(models, collapse = ", ")),
+          paste("Datasets:", paste(datasets_selected, collapse = ", ")),
+          paste("Variables:", paste(variables, collapse = ", ")),
+          "mean: average across 20 years ",
+          "iav: interannual variance across 20 years"
+        ), metadata_file)
+        csv_file = write_csv_safely(variable_metadata, 'variable_metadata.csv', tmpdir)
+        files_to_zip = c(files_to_zip, metadata_file, csv_file)
+      }
+
+      # create zip
+      setwd(tempdir())
+      utils::zip(zipfile=file, files=basename(files_to_zip))
+      print(files_to_zip)
+      
+    },
+    contentType = "application/zip"
+  )
+  
+  observeEvent(input$downloadTriggerButton, {
+    shinyjs::runjs("document.getElementById('hiddenDownloadButton').click();")
+  })
+  
+
+
 }

@@ -24,6 +24,9 @@ CLM_KEY_FILE = file.path(INPUT_DIR, 'clm6sp_oaat_key.csv')
 LAND_FRAC_FILE = file.path(INPUT_DIR, 'land_frac.nc')
 LAND_OUTLINE_FILE = file.path(INPUT_DIR, 'land.shp')
 
+# metadata files
+VARIABLE_METADATA_FILE = file.path(INPUT_DIR, 'variables_metadata.csv')
+
 # data files
 GLOBAL_DATA_FILE = file.path(INPUT_DIR, 'fates_clm_global_annual_data.csv')
 BIOME_DATA_FILE = file.path(INPUT_DIR, 'fates_clm_biome_annual_data.csv')
@@ -99,6 +102,9 @@ clm_param_info = filter(param_info, parameter_name %in% c(clm_only_params, commo
 # get parameter counts
 fates_param_counts = get_param_counts(fates_param_info, LABEL_DF)
 clm_param_counts = get_param_counts(clm_param_info, LABEL_DF)
+
+# variable metadata
+variable_metadata = read.csv(VARIABLE_METADATA_FILE)
 
 # global annual values
 global_data_all = read.csv(GLOBAL_DATA_FILE) %>%

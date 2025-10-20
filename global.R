@@ -28,6 +28,8 @@ if (!require(ggspatial)) install.packages("ggspatial", repos = "http://cran.us.r
 if (!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
 if (!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
 if (!require(shinycssloaders)) install.packages("shinycssloaders", repos = "http://cran.us.r-project.org")
+if (!require(shinyFeedback)) install.packages("shinyFeedback", repos = "http://cran.us.r-project.org")
+if (!require(shinyjs)) install.packages("shinyjs", repos = "http://cran.us.r-project.org")
 
 # source helper scripts
 source("R/constants.R")

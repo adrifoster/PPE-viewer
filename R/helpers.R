@@ -7,6 +7,26 @@
 # #########################
 # #########################
 
+# Gets the variable shortname from the input longname
+# 
+# Args:
+#    variable_longname: A character string giving the variable longname
+#
+# Returns: 
+#    A character string that is the variable shortname
+get_variable_shortname = function(variable_longname){
+  lookup_vec = unlist(LONGNAME_LOOKUP, use.name=TRUE)
+  idx = match(variable_longname, LONGNAME_LOOKUP)
+  shortnames = names(lookup_vec)[idx]
+  
+  if (any(is.na(idx))) {
+    warning("Some variable longnames were not found in LONGNAME_LOOKUP: ",
+            paste(variable_longname[is.na(idx)], collapse = ", "))
+  }
+  return(shortnames)
+  
+}
+
 # Combines a variable name and a type string into a single identifier.
 # 
 # Args:
@@ -658,4 +678,161 @@ get_plot_dat = function(dat, parameter, fates_only, clm_only, fates_and_clm){
   return(sub)
 }
 
+# Prepare global annual data for download
+#
+# Subsets and formats data to be downloaded
+#
+# Args:
+#   full_dataset: Data frame containing all data
+#   variables: Character vector specifying variables to subset (if any).
+#   models: Character vector specifying models to subset (if any).
+#
+# Returns:
+#   A subsetted data frame ready for downloading
+subset_download_global_data = function(full_dataset, variables=c(),
+                                models=c()){
+  
+  out_dat = full_dataset %>%
+    dplyr::select(-X, -ensemble, -mean_sum_diff, -iav_sum_diff,
+                  -sum_diff, -category, -subcategory, -long_name) %>%
+    filter(parameter_name %in% all_nonzero_params) %>%
+    reshape2::melt(id.vars = c('parameter_name', 'type', 'model'),
+                   variable.name='variable_name') %>%
+    mutate(variable = sapply(strsplit(as.character(variable_name), '_'), `[`, 1),
+           variable_type = sapply(strsplit(as.character(variable_name), '_'), `[`, 2)) %>%
+    dplyr::select(model, parameter_name, type, variable, variable_type, value) %>%
+    mutate(model = ifelse(model == 'FATES', 'CLM-FATES', 'CLM'))
+    
+    
+  if (length(variables) > 0){
+    out_dat = dplyr::filter(out_dat, variable %in% variables)
+  }
+  if (length(models) > 0){
+    out_dat = dplyr::filter(out_dat, model %in% models)
+  }
+  
+  return(out_dat)
+}
 
+# Prepare biome-specific annual data for download
+#
+# Subsets and formats data to be downloaded
+#
+# Args:
+#   full_dataset: Data frame containing all data
+#   variables: Character vector specifying variables to subset (if any).
+#   models: Character vector specifying models to subset (if any).
+#
+# Returns:
+#   A subsetted data frame ready for downloading
+subset_download_biome_data = function(full_dataset, variables=c(),
+                                       models=c()){
+  
+  out_dat = full_dataset %>%
+    dplyr::select(-X, -ensemble, -mean_sum_diff, -iav_sum_diff,
+                  -sum_diff, -category, -subcategory, -long_name) %>%
+    filter(parameter_name %in% all_nonzero_params) %>%
+    reshape2::melt(id.vars = c('biome', 'parameter_name', 'type', 'model'),
+                   variable.name='variable_name') %>%
+    mutate(variable = sapply(strsplit(as.character(variable_name), '_'), `[`, 1),
+           variable_type = sapply(strsplit(as.character(variable_name), '_'), `[`, 2)) %>%
+    dplyr::select(model, biome, parameter_name, type, variable, variable_type, value) %>%
+    mutate(model = ifelse(model == 'FATES', 'CLM-FATES', 'CLM'))
+  
+  
+  if (length(variables) > 0){
+    out_dat = dplyr::filter(out_dat, variable %in% variables)
+  }
+  if (length(models) > 0){
+    out_dat = dplyr::filter(out_dat, model %in% models)
+  }
+  
+  return(out_dat)
+  
+}
+
+# Prepare climatology data for download
+#
+# Subsets and formats data to be downloaded
+#
+# Args:
+#   full_dataset: Data frame containing all data
+#   variables: Character vector specifying variables to subset (if any).
+#   models: Character vector specifying models to subset (if any).
+#
+# Returns:
+#   A subsetted data frame ready for downloading
+subset_download_climatology_data = function(full_dataset, variables=c(),
+                                      models=c()){
+  
+  out_dat = full_dataset %>%
+    dplyr::select(-X, -ensemble, -category, -subcategory, -long_name) %>%
+    filter(parameter_name %in% all_nonzero_params) %>%
+    reshape2::melt(id.vars = c('month', 'parameter_name', 'type', 'model'),
+                   variable.name='variable') %>%
+    dplyr::select(model, month, parameter_name, type, variable, value) %>%
+    mutate(model = ifelse(model == 'FATES', 'CLM-FATES', 'CLM'))
+  
+  
+  if (length(variables) > 0){
+    out_dat = dplyr::filter(out_dat, variable %in% variables)
+  }
+  if (length(models) > 0){
+    out_dat = dplyr::filter(out_dat, model %in% models)
+  }
+  
+  return(out_dat)
+  
+}
+
+# Prepare zonal data for download
+#
+# Subsets and formats data to be downloaded
+#
+# Args:
+#   full_dataset: Data frame containing all data
+#   variables: Character vector specifying variables to subset (if any).
+#   models: Character vector specifying models to subset (if any).
+#
+# Returns:
+#   A subsetted data frame ready for downloading
+subset_download_zonal_data = function(full_dataset, variables=c(),
+                                            models=c()){
+  
+  out_dat = full_dataset %>%
+    dplyr::select(-X, -ensemble, -category, -subcategory, -long_name) %>%
+    filter(parameter_name %in% all_nonzero_params) %>%
+    reshape2::melt(id.vars = c('latitude', 'parameter_name', 'type', 'model'),
+                   variable.name='variable') %>%
+    dplyr::select(model, latitude, parameter_name, type, variable, value) %>%
+    mutate(model = ifelse(model == 'FATES', 'CLM-FATES', 'CLM'))
+  
+  
+  if (length(variables) > 0){
+    out_dat = dplyr::filter(out_dat, variable %in% variables)
+  }
+  if (length(models) > 0){
+    out_dat = dplyr::filter(out_dat, model %in% models)
+  }
+  
+  return(out_dat)
+  
+}
+
+# Writes a csv file
+#
+#
+# Args:
+#   df: Dataset to write
+#   filename: Base file name of dataset
+#   out_dir: Directory
+#
+# Returns:
+#   path: full path of file
+#
+write_csv_safely = function(df, filename, out_dir){
+  path = file.path(out_dir, filename)
+  write.csv(df, path, row.names=FALSE)
+  
+  return(path)
+}

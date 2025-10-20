@@ -11,6 +11,13 @@
 VARIABLES = c('GPP', 'EFLX_LH_TOT', 'FSH', 'EF', 'SOILWATER_10CM',
               'FSR', 'FSA', 'FIRE', 'RLNS', 'TV', 'ASA', 'RN', 'BTRANMN',
               'QRUNOFF', 'QSOIL', 'QVEGT', 'QVEGE')
+LONG_NAMES = c('GPP', 'latent heat', 'sensible heat', 'evaporative fraction',
+               'surface soil water', 'upward shortwave radiation',
+               'net shortwave radiation', 'upward longwave radiation', 
+               "net longwave radiation", "vegetation temperature", "albedo",
+               "net radiation", "water stress", "total liquid runoff",
+               "ground evaporation", "canopy transpiration", 
+               "canopy evaporation")
 
 # types that can be plotting
 TYPES = c('mean', 'iav')
@@ -174,7 +181,7 @@ LONGNAME_LOOKUP <- list(
   TV = "vegetation temperature",
   QRUNOFF = "total liquid runoff",
   QSOIL = "ground evaporation",
-  QVEGT = "Canopy Transpiration",
+  QVEGT = "canopy transpiration",
   QVEGE = "canopy evaporation"
   
 )

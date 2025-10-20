@@ -180,6 +180,7 @@ nav.navbar .navbar-brand:focus {
   margin-bottom: 12px;
 } 
 
+
 .btn-primary {
   background-color: var(--deep-blue) !important;
   border: none;
@@ -187,6 +188,7 @@ nav.navbar .navbar-brand:focus {
 .btn-primary:hover {
   background-color: white !important;
 }
+
 
 .about-panel {
   background-color: white;

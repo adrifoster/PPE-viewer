@@ -8,7 +8,8 @@
 # #########################
 
 ### SHINY UI ###
-ui <- bootstrapPage(
+ui = bootstrapPage(
+  shinyjs::useShinyjs(),
   tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
   tags$head(includeScript("www/selectize_click.js")),
   
@@ -166,8 +167,8 @@ ui <- bootstrapPage(
                              selected= all_nonzero_params[1],
                              multiple=FALSE),
                  pickerInput("paramExplorerVariableSelect", "Variable:",
-                             choices = VARIABLES,
-                             selected= VARIABLES[1],
+                             choices = LONG_NAMES,
+                             selected= LONG_NAMES[1],
                              multiple=FALSE),
                ),
                mainPanel(
@@ -246,7 +247,7 @@ ui <- bootstrapPage(
                  tags$p("Select a parameter and output variable to see how it affects model results. Only parameters with non-zero effects are listed."),
 
                  selectizeInput("ensembleVariableSelect", "Variable:",
-                             choices = VARIABLES,
+                             choices = LONG_NAMES,
                              selected = "GPP",
                              multiple=FALSE),
                  selectizeInput("ensembleTypeSelect", "Summation type:",
@@ -299,7 +300,7 @@ ui <- bootstrapPage(
                  tags$p("Select output variable, summation type, and number of parameters to include."),
                  
                  selectizeInput("topParamsVariableSelect", "Variable:",
-                             choices = VARIABLES,
+                             choices = LONG_NAMES,
                              selected = "GPP",
                              multiple=FALSE),
                  selectizeInput("topParamsTypeSelect", "Summation type:",
@@ -360,7 +361,7 @@ ui <- bootstrapPage(
                  tags$h3("Model Comparisons"),
                  tags$p("Select output variable and summation type"),
                  selectizeInput("modelDiffVariableSelect", "Variable:",
-                                choices = VARIABLES,
+                                choices = LONG_NAMES,
                                 selected = "GPP",
                                 multiple=FALSE),
                  selectizeInput("modelDiffTypeSelect", "Summation type:",
@@ -402,71 +403,79 @@ ui <- bootstrapPage(
              )
     ),
     tabPanel("Download Data",
-              bslib::card(
-                bslib::card_header("Download Options"),
-              
-                div(style="display: flex; align-items: center; gap: 10px;",
-                    tags$label("Model(s):", style="font-weight: 500; margin-bottom: 0;"),
-                    actionButton("downloadModelSelectAll", 
-                                 "Select/Deselect All", 
-                                 class="btn-sm")
+              sidebarLayout(
+                sidebarPanel(
+                  class="panel-section sidebar",
+                  tags$h4("Download Data"),
+                  tags$p("Select datasets and variables to download. The downloaded file will be a zipped folder containing CSVs for each dataset."),
+                  div(style="display: flex; align-items: center; gap: 10px;",
+                      tags$label("Dataset(s):", style="font-weight: 500; margin-bottom: 0;"),
+                      actionButton("downloadDataTypeSelectAll", 
+                                   "Select/Deselect All", 
+                                   class = "btn btn-sm btn-outline-primary")
+                  ),
+                  selectizeInput("downloadDataTypeSelect", NULL,
+                                 choices = DATASETS,
+                                 selected=NULL,
+                                 multiple=TRUE,
+                                 options = list(
+                                   plugins = list('remove_button'),
+                                   placeholder="Choose datasets..."
+                                 )
+                  ),
+                  div(style = "display: flex; align-items: center; gap: 10px;",
+                      tags$label("Model(s):", style = "font-weight: 500; margin-bottom: 0;"),
+                      actionButton("downloadModelSelectAll", "Select/Deselect All",
+                                   class = "btn btn-sm btn-outline-primary")
+                  ),
+                  selectizeInput("downloadDataModelSelect", NULL,
+                                 choices = MODELS,
+                                 selected=NULL,
+                                 multiple=TRUE,
+                                 options = list(
+                                   plugins = list('remove_button'),
+                                   placeholder="Choose models..."
+                                 )
+                  ),
+                  div(style="display: flex; align-items: center; gap: 10px;",
+                      tags$label("Variables(s):", style="font-weight: 500; margin-bottom: 0;"),
+                      actionButton("downloadVariableSelectAll", 
+                                   "Select/Deselect All", 
+                                   class="btn btn-sm btn-outline-primary")
+                  ),
+                  selectizeInput("downloadDataVariableSelect", NULL,
+                                 choices = LONG_NAMES,
+                                 selected=NULL,
+                                 multiple=TRUE,
+                                 options = list(
+                                   plugins = list('remove_button'),
+                                   placeholder="Choose variables..."
+                                 )
+                  ),
+                  checkboxInput("includeMetadata", "Include metadata", value = TRUE)
                 ),
-                div(style="margin-top: 5px;",
-                    selectizeInput("downloadDataModelSelect", NULL,
-                                   choices = MODELS,
-                                   selected=NULL,
-                                   multiple=TRUE,
-                                   options = list(
-                                     plugins = list('remove_button'),
-                                     placeholder="Choose models..."
-                                   )
-                    )
-                ),
-                hr(),
-                
-                div(style="display: flex; align-items: center; gap: 10px;",
-                    tags$label("Dataset(s):", style="font-weight: 500; margin-bottom: 0;"),
-                    actionButton("downloadDataTypeSelectAll", 
-                                 "Select/Deselect All", 
-                                 class="btn-sm")
-                ),
-                div(style="margin-top: 5px;",
-                    selectizeInput("downloadDataTypeSelect", NULL,
-                                   choices = DATASETS,
-                                   selected=NULL,
-                                   multiple=TRUE,
-                                   options = list(
-                                     plugins = list('remove_button'),
-                                     placeholder="Choose datasets..."
-                                   )
-                    )
-                ),
-                
-                hr(),
-                
-                div(style="display: flex; align-items: center; gap: 10px;",
-                    tags$label("Variables(s):", style="font-weight: 500; margin-bottom: 0;"),
-                    actionButton("downloadVariableSelectAll", 
-                                 "Select/Deselect All", 
-                                 class="btn-sm")
-                ),
-                div(style="margin-top: 5px;",
-                    selectizeInput("downloadDataVariableSelect", NULL,
-                                   choices = VARIABLES,
-                                   selected=NULL,
-                                   multiple=TRUE,
-                                   options = list(
-                                     plugins = list('remove_button'),
-                                     placeholder="Choose variables..."
-                                   )
-                    )
-                ),
-                
-                hr(),
-                div(class='plot-card-btns',
-                    style = "margin-top: 10px; text-align: left;",
-                    downloadButton("downloadData", "Download Data"))
+                mainPanel(
+                  tags$style(HTML("
+                  button:disabled {
+                  pointer-events: none !important;
+                  opacity: 0.5 !important;
+                  }
+                                  ")),
+                  tags$div(class = "panel-section",
+                           tags$h5("Download Preview"),
+                           tags$p("Files will be organized by dataset, with metadata included if selected."),
+                           tags$div(class = "plot-card",
+                                    shinycssloaders::withSpinner(
+                                      tableOutput("downloadPreviewTable"),
+                                      color = "#012169", type = 1
+                                      )
+                                    )
+                           
+                           ),
+                  actionButton("downloadTriggerButton", label="Download Data"),
+                  downloadButton("hiddenDownloadButton", label="Download", style="visibility: hidden;")
+                  )
+                )
              )
-             )
-    )
+  )
 )
