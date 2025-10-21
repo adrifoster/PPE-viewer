@@ -109,7 +109,7 @@ ui = bootstrapPage(
               tags$p("When CLM is coupled to FATES, CLM provides site and soil conditions and atmospheric forcing, while FATES simulates plant physiological, vegetation demography, and biogeochemical processes (Fig. 1)."),
               tags$div(
                 tags$img(
-                  src = "FATES_schematic091025.png",
+                  src = "FATES_schematic.png",
                   width = "40%",
                   alt = "Conceptual relationship between CLM and CLM-FATES"
                 ),
@@ -145,7 +145,7 @@ ui = bootstrapPage(
               tags$ul(
                 tags$li("Each parameter was run at its minimum and maximum value."),
                 tags$li("Parameter ranges were derived from literature, expert judgment, and prior PPEs."),
-                tags$li("In total: 204 CLM parameters and 143 FATES parameters were perturbed."),
+                tags$li("In total: 204 CLM parameters and 137 FATES parameters were perturbed."),
                 tags$li("Parameters were grouped as common, CLM-only, or FATES-only.")
               ),
               tags$p("Vegetation-related parameters were perturbed together across all PFTs to limit simulation count.")
