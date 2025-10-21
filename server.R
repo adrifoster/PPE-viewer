@@ -328,6 +328,10 @@ server <- function(input, output, session) {
                                       clm_only_params, common_params)
     biome_select = input$topParamsBiomeSelect
     
+    if (length(biome_select) == 0){
+      validate("Please select a biome.")
+    }
+    
     biome_sub = filter(BIOME_DF, BIOME_DF$biome_name %in% biome_select)
     
     plot_top_n_by_biome(
@@ -400,6 +404,15 @@ server <- function(input, output, session) {
               options = list(pageLength=10, autoWidth=TRUE),
               rownames=FALSE)
   })
+  
+  output$downloadParameterTable = downloadHandler(
+    filename = function() {
+      "parameter_table.csv"
+    },
+    content = function(file) {
+      write.csv(output_table, file, row.names = FALSE)
+    }, contentType = "text/csv"
+  )
   
   ## Download Data
   observeEvent(input$downloadModelSelectAll, {
@@ -506,28 +519,28 @@ server <- function(input, output, session) {
     return(df)
   })
   
-  output$downloadPreviewTable <- renderTable({
-    req(input$downloadDataTypeSelect) 
-    
-    dataset = input$downloadDataTypeSelect[1]
-    if (dataset == "Global annual data") {
-      head(subset_global_data())
-    } else if (dataset == "Biome-specific annual data") {
-      head(subset_biome_data())
-    } else if (dataset == "Climatology data") {
-      head(subset_clim_data())
-    } else if (dataset == "Zonal means data") {
-      head(subset_zonal_data())
-    }
-  })
+  # output$downloadPreviewTable <- renderTable({
+  #   req(input$downloadDataTypeSelect) 
+  #   
+  #   dataset = input$downloadDataTypeSelect[1]
+  #   if (dataset == "Global annual data") {
+  #     head(subset_global_data())
+  #   } else if (dataset == "Biome-specific annual data") {
+  #     head(subset_biome_data())
+  #   } else if (dataset == "Climatology data") {
+  #     head(subset_clim_data())
+  #   } else if (dataset == "Zonal means data") {
+  #     head(subset_zonal_data())
+  #   }
+  # })
   
-  observe({
-    if (is.null(input$downloadDataTypeSelect) || length(input$downloadDataTypeSelect) == 0) {
-      shinyjs::disable("downloadTriggerButton")
-    } else {
-      shinyjs::enable("downloadTriggerButton")
-    }
-  })
+  # observe({
+  #   if (is.null(input$downloadDataTypeSelect) || length(input$downloadDataTypeSelect) == 0) {
+  #     shinyjs::disable("downloadTriggerButton")
+  #   } else {
+  #     shinyjs::enable("downloadTriggerButton")
+  #   }
+  # })
 
   output$hiddenDownloadButton = downloadHandler(
     filename = function() {

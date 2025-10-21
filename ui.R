@@ -71,12 +71,19 @@ ui = bootstrapPage(
               tags$span(tags$b("Model Comparison:"), 
                         " Compares the CLM and CLM-FATES responses side by side for equivalent parameter perturbations.")
             ),
-            
+            # Parameter Information
             tags$li(
               style = "margin-bottom: 10px; display: flex; align-items: center; padding: 5px; border-radius: 5px; transition: background-color 0.2s;",
               icon("info-circle", class = "fa-lg", style = "margin-right: 10px;"),
               tags$span(tags$b("Parameter Information:"),
                         " Searchable table of parameter names and descriptions.")
+            ),
+            # Download data
+            tags$li(
+              style = "margin-bottom: 10px; display: flex; align-items: center; padding: 5px; border-radius: 5px; transition: background-color 0.2s;",
+              icon("download", class = "fa-lg", style = "margin-right: 10px;"),
+              tags$span(tags$b("Download Data:"),
+                        " Download data from this study.")
             )
           ),
           tags$p("Use the navigation bar above to switch between sections. Hover over plots for details, and use the download buttons to save data or figures."),
@@ -162,11 +169,11 @@ ui = bootstrapPage(
                  class="panel-section sidebar",
                  tags$h4("Parameter Explorer"),
                  tags$p("Select a parameter and output variable to see how it affects model results. Only parameters with non-zero effects are listed."),
-                 pickerInput("paramExplorerParameterSelect", "Parameter:",
+                 selectizeInput("paramExplorerParameterSelect", "Parameter:",
                              choices = all_nonzero_params,
                              selected= all_nonzero_params[1],
                              multiple=FALSE),
-                 pickerInput("paramExplorerVariableSelect", "Variable:",
+                 selectizeInput("paramExplorerVariableSelect", "Variable:",
                              choices = LONG_NAMES,
                              selected= LONG_NAMES[1],
                              multiple=FALSE),
@@ -323,7 +330,9 @@ ui = bootstrapPage(
                harder to view all at once."),
                selectizeInput("topParamsBiomeSelect", "Biome:",
                               choices = unique(BIOME_DF$biome_name),
-                              options = list(`actions-box` = TRUE),
+                              options = list(
+                                plugins = list('remove_button')
+                              ),
                               selected = 'Tropical rain forest',
                               multiple=TRUE)
                  
@@ -399,7 +408,11 @@ ui = bootstrapPage(
     ),
     tabPanel("Parameter Information",
              fluidPage(
-               DT::dataTableOutput("paramInfoTable")
+               DT::dataTableOutput("paramInfoTable"),
+               div(class='plot-card-btns',
+                   style = "margin-top: 10px; text-align: right;",
+                   downloadButton("downloadParameterTable", "Download Parameter Information")
+               ),
              )
     ),
     tabPanel("Download Data",
@@ -461,19 +474,25 @@ ui = bootstrapPage(
                   opacity: 0.5 !important;
                   }
                                   ")),
+                  tags$link(rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"),
+                  
                   tags$div(class = "panel-section",
                            tags$h5("Download Preview"),
-                           tags$p("Files will be organized by dataset, with metadata included if selected."),
+                           #tags$p("Files will be organized by dataset, with metadata included if selected."),
+                           tags$p("Data download will be available soon."),
                            tags$div(class = "plot-card",
-                                    shinycssloaders::withSpinner(
                                       tableOutput("downloadPreviewTable"),
                                       color = "#012169", type = 1
-                                      )
                                     )
                            
                            ),
-                  actionButton("downloadTriggerButton", label="Download Data"),
-                  downloadButton("hiddenDownloadButton", label="Download", style="visibility: hidden;")
+                  actionButton(
+                    "downloadTriggerButton", 
+                    label=tagList(
+                      icon("download"),
+                      "Download Data"
+                      )),
+                  #downloadButton("hiddenDownloadButton", label="Download", style="visibility: hidden;")
                   )
                 )
              )
