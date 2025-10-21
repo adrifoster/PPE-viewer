@@ -33,8 +33,9 @@ ui = bootstrapPage(
           
           # Logo
           tags$div(
-            style = 'text-align: left; margin: 10px 0;',
-            tags$img(src = 'FATES_LOGO.png', width = '15%', alt = 'FATES logo'),
+            style = 'display: flex; align-items: center; gap: 20px; margin: 10px 0;',
+            tags$img(src = 'FATES_LOGO.png', width = '10%', alt = 'FATES logo'),
+            tags$img(src = 'NSF-NCAR_Lockup-UCAR-Dark_102523.png', width = '25%')
           ),
           tags$br(),
           
@@ -109,7 +110,7 @@ ui = bootstrapPage(
               tags$div(
                 tags$img(
                   src = "FATES_schematic091025.png",
-                  width = "60%",
+                  width = "40%",
                   alt = "Conceptual relationship between CLM and CLM-FATES"
                 ),
                 tags$br(),

@@ -584,8 +584,8 @@ server <- function(input, output, session) {
           paste("Models:", paste(models, collapse = ", ")),
           paste("Datasets:", paste(datasets_selected, collapse = ", ")),
           paste("Variables:", paste(variables, collapse = ", ")),
-          "mean: average across 20 years ",
-          "iav: interannual variance across 20 years"
+          "mean: average across 15 years ",
+          "iav: interannual variance across 15 years"
         ), metadata_file)
         csv_file = write_csv_safely(variable_metadata, 'variable_metadata.csv', tmpdir)
         files_to_zip = c(files_to_zip, metadata_file, csv_file)
