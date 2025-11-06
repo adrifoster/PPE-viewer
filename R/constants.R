@@ -7,6 +7,9 @@
 # #########################
 # #########################
 
+# citation
+CITATION = "Foster et al. in review, JAMES"
+
 # variables that can be plotted
 VARIABLES = c('GPP', 'EFLX_LH_TOT', 'FSH', 'EF', 'SOILWATER_10CM',
               'FSR', 'FSA', 'FIRE', 'RLNS', 'TV', 'ASA', 'RN', 'BTRANMN',
@@ -183,6 +186,51 @@ LONGNAME_LOOKUP <- list(
   QSOIL = "ground evaporation",
   QVEGT = "canopy transpiration",
   QVEGE = "canopy evaporation"
+  
+)
+
+# variable long names
+LONGERNAME_LOOKUP <- list(
+  GPP = "gross primary production",
+  EFLX_LH_TOT = "latent heat",
+  FSH = "sensible heat",
+  EF = "evaporative fraction",
+  ASA = "albedo",
+  SOILWATER_10CM = "surface soil water",
+  BTRANMN = 'water stress',
+  FSDS = "downward shortwave radiation",
+  FSR = "upward shortwave radiation",
+  FSA = "net shortwave radiation",
+  FIRE = "upward longwave radiation",
+  RLNS = "net longwave radiation",
+  RN = "net radiation",
+  TV = "vegetation temperature",
+  QRUNOFF = "total liquid runoff",
+  QSOIL = "ground evaporation",
+  QVEGT = "canopy transpiration",
+  QVEGE = "canopy evaporation"
+  
+)
+
+HISTNAME_LOOKUP <- list(
+  GPP = "FATES_GPP",
+  EFLX_LH_TOT = "EFLX_LH_TOT",
+  FSH = "FSH",
+  EF = "(EFLX_LH_TOT)/(EFLX_LH_TOT + FSH)",
+  ASA = "FSDS/FSR",
+  SOILWATER_10CM = "SOILWATER_10CM",
+  BTRANMN = 'BTRANMN',
+  FSDS = "FSDS",
+  FSR = "FSR",
+  FSA = "FSA",
+  FIRE = "FIRE",
+  RLNS = "FLDS - FIRE",
+  RN = "FLDS - FIRE + FSDS - FSR",
+  TV = "TV",
+  QRUNOFF = "QRUNOFF",
+  QSOIL = "QSOIL",
+  QVEGT = "QVEGT",
+  QVEGE = "QVEGE"
   
 )
 

@@ -110,8 +110,8 @@ server <- function(input, output, session) {
              Sys.Date(), ".png")
     },
     content = function(file) {
-      png(file, width = 900, height = 600, res = 120)
-      print(globalPlot())
+      png(file, width = 7, height = 7, res = 300, units = 'in')
+      print(global_map())
       dev.off()
     }
   )
@@ -312,7 +312,7 @@ server <- function(input, output, session) {
              Sys.Date(), ".png")
     },
     content = function(file) {
-      png(file, width = 900, height = 600, res = 120)
+      png(file, width = 20, height = 7, res = 300, units = 'in')
       print(top_params_plot())
       dev.off()
     }
@@ -352,7 +352,7 @@ server <- function(input, output, session) {
              Sys.Date(), ".png")
     },
     content = function(file) {
-      png(file, width = 900, height = 600, res = 120)
+      png(file, width = 20, height = 10, res = 300, units = 'in')
       print(top_params_biome_plot())
       dev.off()
     }
@@ -375,7 +375,7 @@ server <- function(input, output, session) {
       biome_sub = filter(BIOME_DF, BIOME_DF$biome_name == biome_select)
       plot_var_diff(
         all_var_diff_biome, variable, type, param_select,
-        biome_in = biome_sub$biome, n_include = input$n
+        biome_in = biome_sub$biome, n_include = n
       )
     }
     
@@ -392,7 +392,7 @@ server <- function(input, output, session) {
              Sys.Date(), ".png")
     },
     content = function(file) {
-      png(file, width = 900, height = 600, res = 120)
+      png(file, width = 15, height = 7, res = 300, units='in')
       print(model_diff_plot())
       dev.off()
     }

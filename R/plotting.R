@@ -73,6 +73,14 @@ plot_var_diff = function(dat_in, variable, type, param_select, biome_in=c(),
             axis.title=element_text(size=14),
             legend.text=element_text(size=14)) 
     
+    p = p + 
+      plot_annotation(caption = paste0('Percent difference in ',
+                                       LONGERNAME_LOOKUP[variable], "\n",
+                                       "Corresponding history variable: ", 
+                                       HISTNAME_LOOKUP[variable], "\n",
+                                       CITATION)) &
+      theme(plot.caption = element_text(hjust = 0, face = "italic"))
+    
     
   } else if (param_select == 'distinct'){
     
@@ -132,7 +140,14 @@ plot_var_diff = function(dat_in, variable, type, param_select, biome_in=c(),
       ggtitle('CLM')
     
     
-    p = pfates + pclm + plot_layout(guides='collect')
+    p = pfates + pclm + plot_layout(guides='collect') 
+    p = p + 
+      plot_annotation(caption = paste0('Percent difference in ',
+                                       LONGERNAME_LOOKUP[variable], "\n",
+                                       "Corresponding history variable: ", 
+                                       HISTNAME_LOOKUP[variable], "\n",
+                                       CITATION)) &
+      theme(plot.caption = element_text(hjust = 0, face = "italic"))
     
   } else if (param_select == 'all') {
     
@@ -194,6 +209,13 @@ plot_var_diff = function(dat_in, variable, type, param_select, biome_in=c(),
   
     
     p = pfates + pclm + plot_layout(guides='collect')
+    p = p + 
+      plot_annotation(caption = paste0('Percent difference in ',
+                                       LONGERNAME_LOOKUP[variable], "\n",
+                                       "Corresponding history variable: ", 
+                                       HISTNAME_LOOKUP[variable], "\n",
+                                       CITATION)) &
+      theme(plot.caption = element_text(hjust = 0, face = "italic"))
     
   }
   
@@ -232,8 +254,6 @@ plot_ensemble_variance = function(global_df, variable, type){
   ensemble_range = dplyr::mutate(ensemble_range, 
                                  model_name = ifelse(model_name == 'FATES', 
                                                      'CLM-FATES', model_name))
-  
-  
   if (type == 'iav'){
     
     p <- ggplot() +
@@ -253,9 +273,17 @@ plot_ensemble_variance = function(global_df, variable, type){
       theme(axis.text=element_text(size=10),
             axis.title=element_text(size=10),
             legend.text=element_text(size=10),
+            plot.caption = element_text(hjust = 0, face = "italic"),
             legend.title=element_text(size=10)) +
       xlab(NULL) +
-      ylab(NULL)
+      ylab(NULL) +
+      labs(
+        caption = paste0('Mean global annual ',
+                         LONGERNAME_LOOKUP[variable], "\n",
+                         "Corresponding history variable: ", 
+                         HISTNAME_LOOKUP[variable], "\n",
+                         CITATION)
+      )
     
   } else {
     p <- ggplot() +
@@ -275,9 +303,17 @@ plot_ensemble_variance = function(global_df, variable, type){
       theme(axis.text=element_text(size=10),
             axis.title=element_text(size=10),
             legend.text=element_text(size=10),
-            legend.title=element_text(size=10)) +
+            legend.title=element_text(size=10),
+            plot.caption = element_text(hjust = 0, face = "italic")) +
       xlab(NULL) +
-      ylab(NULL)
+      ylab(NULL) +
+      labs(
+        caption = paste0('Mean global annual ',
+                                   LONGERNAME_LOOKUP[variable], "\n",
+                                   "Corresponding history variable: ", 
+                                   HISTNAME_LOOKUP[variable], "\n",
+                                   CITATION)
+        )
     
   }
   
@@ -340,8 +376,6 @@ plot_cumulative_variance = function(variance_df, variable, type, param_chunks){
   clm_fates_cumm_variance = rbind(fates_cumm_variance, clm_cumm_variance) %>%
     mutate(model = factor(model, levels = c('CLM-FATES', 'CLM')))
   
-  print(clm_fates_cumm_variance)
-  
   # plot
   ggplot(clm_fates_cumm_variance, aes(param_chunk, propsum)) +
     geom_col(aes(fill=model), position='dodge') +
@@ -355,7 +389,15 @@ plot_cumulative_variance = function(variance_df, variable, type, param_chunks){
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           legend.text=element_text(size=12),
-          legend.title=element_text(size=12)) 
+          plot.caption = element_text(hjust = 0, face = "italic"),
+          legend.title=element_text(size=12)) +
+    labs(
+      caption = paste0('Cumulative variance in global mean annual ',
+                       LONGERNAME_LOOKUP[variable], "\n",
+                       "Corresponding history variable: ", 
+                       HISTNAME_LOOKUP[variable], "\n",
+                       CITATION)
+    )
 }
 
 
@@ -417,7 +459,8 @@ top_n_plot = function(df, default_data, variable, min_vals, max_vals, title){
           axis.text.x=element_text(size=14),
           axis.title=element_text(size=14),
           legend.text=element_text(size=14),
-          plot.title=element_text(size=16))
+          plot.title=element_text(size=16)) 
+  
   
 }
 
@@ -474,8 +517,14 @@ plot_top_n = function(fates_clm_min_max, fates_ensemble, clm_ensemble,
   p = p1 + p2 + plot_layout(guides='collect') +
     plot_annotation(paste0("Top ", n, " parameters for ", 
                            LONGNAME_LOOKUP[[variable]]),
+                    caption = paste0('Top parameters for mean global annual ',
+                                     LONGERNAME_LOOKUP[variable], "\n",
+                                     "Corresponding history variable: ", 
+                                     HISTNAME_LOOKUP[variable], "\n",
+                                     CITATION),
                     theme = theme(
-                      plot.title = element_text(size = 16)
+                      plot.title = element_text(size = 16),
+                      plot.caption = element_text(hjust = 0, face = "italic")
                     )) 
   return(p)
   
@@ -687,7 +736,7 @@ plot_top_n_by_biome = function(min_max_biome_df, fates_biome, clm_biome,
   all_default = mutate(all_default, 
                        model = factor(model, levels=c('CLM-FATES', 'CLM')))
   
-  ggplot(filter(all_top_n, biome != 0)) + 
+  p = ggplot(filter(all_top_n, biome != 0)) + 
     geom_point(aes(parameter_name, min, pch = 'low value', col=category), size = 4, 
                show.legend = T) +
     geom_point(aes(parameter_name, max, pch = 'high value', col=category), size = 4,
@@ -720,6 +769,21 @@ plot_top_n_by_biome = function(min_max_biome_df, fates_biome, clm_biome,
           legend.text=element_text(size=14),
           strip.text = element_text(size = 14),
           plot.title=element_text(size=16))
+  
+  p = p + 
+    plot_annotation(paste0("Top ", n, " parameters for ", 
+                           LONGNAME_LOOKUP[[variable]]),
+                    caption = paste0('Top parameters for mean global annual ',
+                                     LONGERNAME_LOOKUP[variable], "\n",
+                                     "Corresponding history variable: ", 
+                                     HISTNAME_LOOKUP[variable], "\n",
+                                     CITATION),
+                    theme = theme(
+                      plot.title = element_text(size = 16),
+                      plot.caption = element_text(hjust = 0, face = "italic")
+                    ))
+  
+  return(p)
 }
 
 
@@ -860,13 +924,19 @@ plot_global_vals_2models = function(dat_clm, dat_fates, variable, land){
   
   p_out = (p_min_clm + p_min_fates) / (p_max_clm + p_max_fates) +
     plot_layout(heights = c(5,5), widths=c(7,7), guides='collect') +
-    plot_annotation(theme = theme(
-      plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
-    )) &
+    plot_annotation(
+      theme = theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5)),
+      caption = paste0('Mean annual ',
+                       LONGERNAME_LOOKUP[variable], "\n",
+                       "Corresponding history variable: ", 
+                       HISTNAME_LOOKUP[variable], "\n",
+                       CITATION)
+    ) &
     theme(legend.direction = "horizontal",
           legend.position='bottom',
           legend.title = element_text(size = 16),    
           legend.text = element_text(size = 12),
+          plot.caption = element_text(hjust = 0, face = "italic"),
           legend.margin = margin(t = 0, unit = "pt"))
   
   
@@ -906,7 +976,15 @@ plot_global_diffs_2models = function(dat_clm, dat_fates, variable, land){
                                paste0('CLM', ': max - min'), land)
   
   
-  p_out = p_diff_clm / p_diff_fates + plot_layout(guides='collect')
+  p_out = p_diff_clm / p_diff_fates + plot_layout(guides='collect') +
+    plot_annotation(
+      caption = paste0('Mean annual max - min difference in ',
+                       LONGERNAME_LOOKUP[variable], "\n",
+                       "Corresponding history variable: ", 
+                       HISTNAME_LOOKUP[variable], "\n",
+                       CITATION)
+    ) &
+    theme(plot.caption = element_text(hjust = 0, face = "italic"))
   
   return(p_out)
   
@@ -936,7 +1014,15 @@ plot_global_diffs_1model = function(dat, variable, model, land){
   max_diff_val <- max(abs(dat[[paste0(variable, '_diff')]]), na.rm = TRUE)
   
   p_diff = difference_plot(dat, variable, max_diff_val, 
-                           paste0(model, ': max - min'), land)
+                           paste0(model, ': max - min'), land) +
+    plot_annotation(
+      caption = paste0('Mean annual max - min difference in ',
+                       LONGERNAME_LOOKUP[variable], "\n",
+                       "Corresponding history variable: ", 
+                       HISTNAME_LOOKUP[variable], "\n",
+                       CITATION)
+    ) &
+    theme(plot.caption = element_text(hjust = 0, face = "italic"))
   
   return(p_diff)
   
@@ -969,10 +1055,16 @@ plot_global_vals_1model = function(dat, variable, model, land){
   p_min = global_plot(dat, variable, fill_limits, 'min', model, land)
   p_max = global_plot(dat, variable, fill_limits, 'max', model, land)
   
-  p_out = (p_min / p_max)  + plot_layout(guides='collect') &
+  p_out = (p_min / p_max) + plot_layout(guides='collect') +
+   plot_annotation(caption = paste0('Mean annual ',
+                                    LONGERNAME_LOOKUP[variable], "\n",
+                                    "Corresponding history variable: ", 
+                                    HISTNAME_LOOKUP[variable], "\n",
+                                    CITATION)) &
     theme(legend.direction = "vertical",
           legend.title = element_text(size = 16),    
-          legend.text = element_text(size = 12)) 
+          legend.text = element_text(size = 12),
+          plot.caption = element_text(hjust = 0, face = "italic")) 
   
   return(p_out)
   
@@ -1129,7 +1221,13 @@ plot_diff_diffs = function(fatesclm_global_dat, clm_global_dat, parameter, varia
     max_diff_val <- max(abs(dat[[paste0(variable, '_model_diff')]]), na.rm = TRUE)
     
     p_diff = difference_plot(dat, variable, max_diff_val, '∆CLM-FATES - ∆CLM',
-                             land, model_diff=TRUE)
+                             land, model_diff=TRUE) +
+      plot_annotation(caption = paste0('Difference in mean annual ',
+                                       LONGERNAME_LOOKUP[variable], "\n",
+                                       "Corresponding history variable: ", 
+                                       HISTNAME_LOOKUP[variable], "\n",
+                                       CITATION)) &
+      theme(plot.caption = element_text(hjust = 0, face = "italic"))
     
     return(p_diff)
     
@@ -1183,6 +1281,15 @@ plot_zonal_dat = function(dat, variable, parameter,
   } else if (!facet_model & facet_type){
     p = p + facet_grid(.~type)
   }
+  
+  p = p +
+    plot_annotation(caption = paste0('Zonal mean annual ',
+                                      LONGERNAME_LOOKUP[variable], "\n",
+                                      "Corresponding history variable: ", 
+                                      HISTNAME_LOOKUP[variable], "\n",
+                                      CITATION)) &
+    theme(plot.caption = element_text(hjust = 0, face = "italic"))
+    
   
   return(p)
   
@@ -1238,6 +1345,15 @@ plot_clim_dat = function(dat, variable, parameter, facet_model=FALSE,
   } else if (!facet_model & facet_type){
     p = p + facet_grid(.~type)
   }
+  
+  p = p +
+    plot_annotation(caption = paste0('Global mean monthly ',
+                                     LONGERNAME_LOOKUP[variable], "\n",
+                                     "Corresponding history variable: ", 
+                                     HISTNAME_LOOKUP[variable], "\n",
+                                     CITATION)) &
+    theme(plot.caption = element_text(hjust = 0, face = "italic"))
+  
   
   return(p)
   
