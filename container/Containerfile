@@ -4,7 +4,7 @@ RUN apt update &&  apt -y install libudunits2-dev libssl-dev libasl-dev libabsl-
 COPY ./ /srv/shiny-server/
 WORKDIR /srv/shiny-server
 RUN wget https://pub.k8s.ucar.edu/afoster/input_data.tar.gz && tar xzvf input_data.tar.gz && rm input_data.tar.gz
-RUN Rscript global2.R
+#RUN Rscript global2.R
 RUN R -e "install.packages(c('ggpattern','ncdf4', 'terra', 'ggspatial', 'forcats'), dependencies=TRUE)"
 RUN chown -R shiny:shiny /srv/shiny-server
 USER shiny
