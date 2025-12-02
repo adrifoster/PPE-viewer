@@ -31,5 +31,5 @@ jobs:
       with:
         push: true
         tags: hub.k8s.ucar.edu/afoster/ppeviewer:${{ env.SHORT_SHA }}
-        file: repo/containers/Containerfile
+        file: repo/container/Containerfile
         context: repo
