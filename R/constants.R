@@ -71,7 +71,7 @@ BIOME_NAMES = c("Ice sheet", "Tropical rain forest",
 
 
 BIOME_DF = data.frame(biome = seq(0, 9),
-                      biome_name = BIOME_NAMES) %>%
+                      biome_name = BIOME_NAMES) |>
   filter(biome != 0)
 
 # colors
