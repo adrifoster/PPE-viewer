@@ -18,3 +18,10 @@ spec:
         image: hub.k8s.ucar.edu/afoster/ppeviewer:0.0.1
         ports:
         - containerPort: 3838
+        resources:
+          requests:
+            cpu: 0.1
+            memory: 256Mi
+          limits:
+            cpu: 1
+            memory: 1Gi
