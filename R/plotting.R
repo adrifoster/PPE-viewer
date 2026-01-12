@@ -866,7 +866,7 @@ global_plot = function(dat, variable, fill_limits, type, model, land){
                                 fill=.data[[paste0(variable, '_', type)]])) +
     scale_fill_distiller(limits=fill_limits,
                          palette=PALETTE_LOOKUP[[variable]],
-                         name=YLABEL_LOOKUP[[variable]],
+                         name=YLABEL_MAP_LOOKUP[[variable]],
                          direction=dir) +
     geom_sf(data = land, fill = NA, color = "black", size = 0.3) +
     coord_sf(expand = FALSE) +
@@ -1324,7 +1324,7 @@ plot_clim_dat = function(dat, variable, parameter, facet_model=FALSE,
     scale_colour_manual(values=c(MAX_COL, MIN_COL), name=NULL) +
     scale_linetype_manual(values=c(1, 2), 
                           name=NULL, drop=F) +
-    ylab(YLABEL_LOOKUP[[variable]]) +
+    ylab(YLABEL_CLIMATOLOGY_LOOKUP[[variable]]) +
     xlab(NULL) +
     theme_bw() +
     scale_x_continuous(breaks=seq(1,12),

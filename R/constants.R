@@ -101,15 +101,58 @@ YLABEL_LOOKUP <- list(
   QVEGE = expression(Canopy~Evaporation~(mm~yr^{-1}))
 )
 
+# variable y labels
+YLABEL_CLIMATOLOGY_LOOKUP <- list(
+  GPP = expression(GPP~(PgC~day^{-1})),
+  EFLX_LH_TOT = expression(Latent~Heat~(W~m^{-2})),
+  FSH = expression(Sensible~Heat~(W~m^{-2})),
+  EF = expression(Evaporative~Fraction~(0-1)),
+  ASA = expression(Albedo~(0-1)),
+  SOILWATER_10CM = expression(Surface~Soil~Water~(PgH[2]*O)),
+  BTRANMN = expression(Minimum~Beta_t~(0-1)),
+  FSDS = expression(Downward~Shortwave~Radiation~(W~m^{-2})),
+  FSR = expression(Upward~Shortwave~Radiation~(W~m^{-2})),
+  FSA = expression(Net~Shortwave~Radiation~(W~m^{-2})),
+  FIRE = expression(Upward~Longwave~Radiation~(W~m^{-2})),
+  RLNS = expression(Net~Longwave~Radiation~(W~m^{-2})),
+  RN = expression(Net~Radiation~(W~m^{-2})),
+  TV = expression(Vegetation~Temperature~(K)),
+  QRUNOFF = expression(Total~Liquid~Runoff~(mm~day^{-1})),
+  QSOIL = expression(Ground~Evaporation~(mm~day^{-1})),
+  QVEGT = expression(Canopy~Transpiration~(mm~day^{-1})),
+  QVEGE = expression(Canopy~Evaporation~(mm~day^{-1}))
+)
+
+# variable y labels
+YLABEL_MAP_LOOKUP <- list(
+  GPP = expression(GPP~(kgC~m^{-2}~yr^{-1})),
+  EFLX_LH_TOT = expression(Latent~Heat~(W~m^{-2})),
+  FSH = expression(Sensible~Heat~(W~m^{-2})),
+  EF = expression(Evaporative~Fraction~(0-1)),
+  ASA = expression(Albedo~(0-1)),
+  SOILWATER_10CM = expression(Surface~Soil~Water~(kgH[2]*O~m^{-2})),
+  BTRANMN = expression(Minimum~Beta_t~(0-1)),
+  FSDS = expression(Downward~Shortwave~Radiation~(W~m^{-2})),
+  FSR = expression(Upward~Shortwave~Radiation~(W~m^{-2})),
+  FSA = expression(Net~Shortwave~Radiation~(W~m^{-2})),
+  FIRE = expression(Upward~Longwave~Radiation~(W~m^{-2})),
+  RLNS = expression(Net~Longwave~Radiation~(W~m^{-2})),
+  RN = expression(Net~Radiation~(W~m^{-2})),
+  TV = expression(Vegetation~Temperature~(K)),
+  QRUNOFF = expression(Total~Liquid~Runoff~(mm~yr^{-1})),
+  QSOIL = expression(Ground~Evaporation~(mm~yr^{-1})),
+  QVEGT = expression(Canopy~Transpiration~(mm~yr^{-1})),
+  QVEGE = expression(Canopy~Evaporation~(mm~yr^{-1}))
+)
 
 # variable y labels
 YLABEL_LOOKUP_DELTA <- list(
-  GPP = expression(Delta~GPP~(PgC~yr^{-1})),
+  GPP = expression(Delta~GPP~(kgC~m^{-2}~yr^{-1})),
   EFLX_LH_TOT = expression(Delta~Latent~Heat~(W~m^{-2})),
   FSH = expression(Delta~Sensible~Heat~(W~m^{-2})),
   EF = expression(Delta~Evaporative~Fraction~(0-1)),
   ASA = expression(Delta~Albedo~(0-1)),
-  SOILWATER_10CM = expression(Delta~Surface~Soil~Water~(PgH[2]*O)),
+  SOILWATER_10CM = expression(Delta~Surface~Soil~Water~(kgH[2]*O~m^{-2})),
   BTRANMN = expression(Delta~Minimum~Beta_t~(0-1)),
   FSDS = expression(Delta~Downward~Shortwave~Radiation~(W~m^{-2})),
   FSR = expression(Delta~Upward~Shortwave~Radiation~(W~m^{-2})),
