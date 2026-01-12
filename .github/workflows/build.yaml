@@ -18,6 +18,7 @@ jobs:
     - name: Chekcout Repo
       uses: actions/checkout@v5
       with:
+        ref: main
         path: repo
         fetch-depth: 0
 
@@ -44,5 +45,5 @@ jobs:
         git config user.name "Auto-ci"
         git add kustomization.yaml
         git commit -m "CI updating kustomization image tag"
-        git push
+        git push origin HEAD:main
 
