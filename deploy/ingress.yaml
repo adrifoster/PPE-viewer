@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ppe-viewer
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: incommon
+spec:
+  ingressClassName: nginx-internal
+  rules:
+  - host: ppeviewer.k8s.ucar.edu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ppe-viewer
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - ppeviewer.k8s.ucar.edu
+    secretName: ppeviewer-tls
