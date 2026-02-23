@@ -9,4 +9,4 @@ resources:
 images:
 - name: hub.k8s.ucar.edu/afoster/ppeviewer
   newName: hub.k8s.ucar.edu/afoster/ppeviewer
-  newTag: 0067d3b
+  newTag: 48b50d1
