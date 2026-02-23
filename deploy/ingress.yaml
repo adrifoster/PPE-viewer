@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: incommon
 spec:
-  ingressClassName: nginx-internal
+  ingressClassName: nginx-external
   rules:
   - host: ppeviewer.k8s.ucar.edu
     http:

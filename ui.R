@@ -159,7 +159,28 @@ ui = bootstrapPage(
           tags$h4("Contact"),
           tags$p("Adrianna Foster, NCAR — ", tags$a(href="mailto:afoster@ucar.edu", "afoster@ucar.edu")),
           tags$br(),
-        
+          
+          # Citations
+          tags$h4("Citations"),
+          tags$p("If you use this data or figures please cite the paper associated with the project:"),
+          tags$p(tags$i("Foster, A., Hawkins, L. R., Kennedy, D., Bonan, G., Fisher, R., 
+                        Needham, J., Knox, R., Koven, C., Wieder, W., Dagon, K., & 
+                        Lawrence, D. (2026). Contrasting parametric sensitivities 
+                        in two global vegetation models using parameter perturbation 
+                        ensembles [Data set]. In Journal of Advances in Modeling Earth Systems. 
+                        Zenodo"), tags$a(href="https://doi.org/10.5281/zenodo.18203140", 
+                                         tags$i("https://doi.org/10.5281/zenodo.18203140"))),
+          
+          tags$p("You can also find the full dataset associated with this project at:"),
+          tags$p(tags$i("Foster, A., Hawkins, L. R., Kennedy, D., Bonan, G., Fisher, R., 
+                        Needham, J., Knox, R., Koven, C., Wieder, W., Dagon, K., & 
+                        Lawrence, D. (2026). Contrasting parametric sensitivities 
+                        in two global vegetation models using parameter perturbation 
+                        ensembles [Data set]. In Journal of Advances in Modeling Earth Systems. 
+                        Zenodo"), tags$a(href="https://doi.org/10.5281/zenodo.18203140", 
+                                         tags$i("https://doi.org/10.5281/zenodo.18203140"))),
+          
+
           # Acknowledgements 
           tags$h4("Acknowledgments"),
           tags$p("This material is based upon work supported by the NSF National Center for Atmospheric Research, which is a major facility sponsored by the National Science Foundation under Cooperative Agreement No. 1852977. Computing and data storage resources, including the Derecho supercomputer (doi:10.5065/qx9a-pg09) were provided by the Climate Simulation Laboratory at NSF-NCAR's Computational and Information Systems Laboratory (CISL)."),
