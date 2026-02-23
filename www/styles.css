@@ -1,11 +1,12 @@
 /* styles.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root{
-  --main-blue: #1A658F;
-  --deep-blue: #012169;
-  --highlight-green: #A8C700;
+  --bs-body-font-family: 'Poppins', sans-serif;
+  --main-blue: #0057C2;
+  --deep-blue: #00357A;
+  --highlight-green: #42C0FF;
   --cool-gray: #53565A;
   --light-blue: #C3D7EE;
   --soft-bg: #f7f9fc;
@@ -16,7 +17,7 @@
 }
 
 body, .container-fluid {
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-size: 15px;
   color: var(--cool-gray);
   background-color: var(--soft-bg);

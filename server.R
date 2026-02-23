@@ -519,28 +519,28 @@ server <- function(input, output, session) {
     return(df)
   })
   
-  # output$downloadPreviewTable <- renderTable({
-  #   req(input$downloadDataTypeSelect) 
-  #   
-  #   dataset = input$downloadDataTypeSelect[1]
-  #   if (dataset == "Global annual data") {
-  #     head(subset_global_data())
-  #   } else if (dataset == "Biome-specific annual data") {
-  #     head(subset_biome_data())
-  #   } else if (dataset == "Climatology data") {
-  #     head(subset_clim_data())
-  #   } else if (dataset == "Zonal means data") {
-  #     head(subset_zonal_data())
-  #   }
-  # })
+  output$downloadPreviewTable <- renderTable({
+    req(input$downloadDataTypeSelect)
+
+    dataset = input$downloadDataTypeSelect[1]
+    if (dataset == "Global annual data") {
+      head(subset_global_data())
+    } else if (dataset == "Biome-specific annual data") {
+      head(subset_biome_data())
+    } else if (dataset == "Climatology data") {
+      head(subset_clim_data())
+    } else if (dataset == "Zonal means data") {
+      head(subset_zonal_data())
+    }
+  })
   
-  # observe({
-  #   if (is.null(input$downloadDataTypeSelect) || length(input$downloadDataTypeSelect) == 0) {
-  #     shinyjs::disable("downloadTriggerButton")
-  #   } else {
-  #     shinyjs::enable("downloadTriggerButton")
-  #   }
-  # })
+  observe({
+    if (is.null(input$downloadDataTypeSelect) || length(input$downloadDataTypeSelect) == 0) {
+      shinyjs::disable("downloadTriggerButton")
+    } else {
+      shinyjs::enable("downloadTriggerButton")
+    }
+  })
 
   output$hiddenDownloadButton = downloadHandler(
     filename = function() {

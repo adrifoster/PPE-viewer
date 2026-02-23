@@ -7,6 +7,8 @@
 # #########################
 # #########################
 
+ncar_dark_blue = '#00357A'
+
 ### SHINY UI ###
 ui = bootstrapPage(
   shinyjs::useShinyjs(),
@@ -19,7 +21,7 @@ ui = bootstrapPage(
                    "CLM-FATES and CLM PPE"),
     id = 'main_nav',
     windowTitle = 'CLM-FATES and CLM PPE',
-    theme = bslib::bs_theme(version = 5, base_font = bslib::font_google("Inter")),
+    theme = bslib::bs_theme(version = 5, base_font = bslib::font_google("Poppins")),
     
     ## About this study panel
     tabPanel("About this Study",
@@ -34,8 +36,8 @@ ui = bootstrapPage(
           # Logo
           tags$div(
             style = 'display: flex; align-items: center; gap: 20px; margin: 10px 0;',
-            tags$img(src = 'FATES_LOGO.png', width = '10%', alt = 'FATES logo'),
-            tags$img(src = 'NSF-NCAR_Lockup-UCAR-Dark_102523.png', width = '25%')
+            tags$img(src = 'FATES_LOGO.png', width = '15%', alt = 'FATES logo'),
+            tags$img(src = 'NSF-NCAR_Logo_FullColor_RGB.png', width = '50%')
           ),
           tags$br(),
           
@@ -189,7 +191,7 @@ ui = bootstrapPage(
                    tags$h6(uiOutput("paramExplorerVariable")),
                    tags$div(class='plot-card', 
                             shinycssloaders::withSpinner(tableOutput("paramExplorerSummaryTable"),
-                                                         color="#012169",
+                                                         color=ncar_dark_blue,
                                                          type=1))
                  ),
                  tabsetPanel(
@@ -201,7 +203,7 @@ ui = bootstrapPage(
                               shinycssloaders::withSpinner(plotOutput("globalValuesPlot", 
                                                                       height="500px", 
                                                                       width="700px"),
-                                                           color="#012169")),
+                                                           color=ncar_dark_blue)),
                      div(class='plot-card-btns',
                          style = "margin-top: 10px; text-align: right;",
                          downloadButton("downloadGlobalPlot", "Download Plot")
@@ -213,7 +215,7 @@ ui = bootstrapPage(
                      tags$div(class="plot-card", 
                               shinycssloaders::withSpinner(plotOutput("globalValuesDifferencePlot",
                                                                       height="500px", width="700px"),
-                                                           color="#012169")),
+                                                           color=ncar_dark_blue)),
                      div(class='plot-card-btns',
                          style = "margin-top: 10px; text-align: right;",
                          downloadButton("downloadGlobalDiffPlot", "Download Plot")
@@ -224,7 +226,7 @@ ui = bootstrapPage(
                      "Global maps: model differences",
                             tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesModelDifferencePlot",
                                        height="500px",
-                                       width="700px"), color="#012169")),
+                                       width="700px"), color=ncar_dark_blue)),
                      div(class='plot-card-btns',
                          style = "margin-top: 10px; text-align: right;",
                          downloadButton("downloadGlobalDiffDiffPlot", "Download Plot")
@@ -234,14 +236,14 @@ ui = bootstrapPage(
                      "Climatology & Zonal Means",
                      tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesClimPlot",
                                                                                          height="400px",
-                                width="600px"), color="#012169")),
+                                width="600px"), color=ncar_dark_blue)),
                      div(class='plot-card-btns',
                          style = "margin-top: 10px; text-align: right;",
                          downloadButton("downloadClimatologyPlot", "Download Plot")
                      ),
                      tags$div(class="plot-card", shinycssloaders::withSpinner(plotOutput("globalValuesZonalPlot",
                                                                                          height="400px",
-                                width="600px"), color="#012169")),
+                                width="600px"), color=ncar_dark_blue)),
                      div(class='plot-card-btns',
                          style = "margin-top: 10px; text-align: right;",
                          downloadButton("downloadZonalPlot", "Download Plot")
@@ -288,7 +290,7 @@ ui = bootstrapPage(
                             tags$p("Hover over a point to see what parameter was perturbed and in which direction for that ensemble member."),
                             tags$br(),
                             tags$div(class='plot-card', shinycssloaders::withSpinner(plotlyOutput("ensemblePlot", height="700px", width="600px"),
-                                                                                     color="#012169")),
+                                                                                     color=ncar_dark_blue)),
                             ),
                    tabPanel("Cumulative Variance",
                             tags$br(),
@@ -296,7 +298,7 @@ ui = bootstrapPage(
                             tags$p("Variance contribution of a parameter to the global annual mean or interannual variance was calculated as the sum of the squared differences from the default simulation:"),
                             withMathJax("$$V_i = (\\bar{x}_i - x_{i,min})^2  + (x_{i,max} - \\bar{x}_i)^2$$"),
                             tags$div(class='plot-card', shinycssloaders::withSpinner(plotOutput("cumulativeVariancePlot", height="500px", width="700px"),
-                                                                                     color="#012169")),
+                                                                                     color=ncar_dark_blue)),
                             div(class='plot-card-btns',
                                 style = "margin-top: 10px; text-align: right;",
                                 downloadButton("downloadCumulativeVarPlot", "Download Plot"))
@@ -350,7 +352,7 @@ ui = bootstrapPage(
                    tabPanel("Global", 
                             tags$div(class='plot-card', 
                                      shinycssloaders::withSpinner(plotOutput("topParametersPlot", width="900px", height="500px"),
-                                                                  color="#012169")),
+                                                                  color=ncar_dark_blue)),
                             div(class='plot-card-btns',
                                 style = "margin-top: 10px; text-align: right;",
                                 downloadButton("downloadTopParamsPlot", "Download Plot"))
@@ -359,7 +361,7 @@ ui = bootstrapPage(
                    tabPanel("By Biome", 
                             tags$div(class='plot-card', 
                                      shinycssloaders::withSpinner(plotOutput("topParametersbyBiomePlot", height="700px",
-                                                   width="900px"), color="#012169")),
+                                                   width="900px"), color=ncar_dark_blue)),
                             div(class='plot-card-btns',
                                 style = "margin-top: 10px; text-align: right;",
                                 downloadButton("downloadTopParamsByBiomePlot", "Download Plot"))
@@ -402,7 +404,7 @@ ui = bootstrapPage(
                  tags$h5("Percent differences in annual means for each parameter for select variables."),
                  tags$div(class='plot-card', 
                           shinycssloaders::withSpinner(plotOutput("modelDiffPlot", height="400px", width="700px"),
-                                                       color="#012169")),
+                                                       color=ncar_dark_blue)),
                  div(class='plot-card-btns',
                      style = "margin-top: 10px; text-align: right;",
                      downloadButton("downloadModelDiffPlot", "Download Plot"))
@@ -483,11 +485,10 @@ ui = bootstrapPage(
                   
                   tags$div(class = "panel-section",
                            tags$h5("Download Preview"),
-                           #tags$p("Files will be organized by dataset, with metadata included if selected."),
-                           tags$p("Data download will be available soon."),
+                           tags$p("Files will be organized by dataset, with metadata included if selected."),
                            tags$div(class = "plot-card",
                                       tableOutput("downloadPreviewTable"),
-                                      color = "#012169", type = 1
+                                      color = ncar_dark_blue, type = 1
                                     )
                            
                            ),
@@ -497,7 +498,7 @@ ui = bootstrapPage(
                       icon("download"),
                       "Download Data"
                       )),
-                  #downloadButton("hiddenDownloadButton", label="Download", style="visibility: hidden;")
+                  downloadButton("hiddenDownloadButton", label="Download", style="visibility: hidden;")
                   )
                 )
              )
